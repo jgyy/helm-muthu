@@ -1,8 +1,16 @@
-{{- define "mychart.name" -}}
+{{/*
+Expand the name of the chart.
+*/}}
+{{- define "mysubchart.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
-{{- define "mychart.fullname" -}}
+{{/*
+Create a default fully qualified app name.
+We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+If release name contains chart name it will be used as a full name.
+*/}}
+{{- define "mysubchart.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -15,44 +23,40 @@
 {{- end }}
 {{- end }}
 
-{{- define "mychart.chart" -}}
+{{/*
+Create chart name and version as used by the chart label.
+*/}}
+{{- define "mysubchart.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
-{{- define "mychart.labels" -}}
-helm.sh/chart: {{ include "mychart.chart" . }}
-{{ include "mychart.selectorLabels" . }}
+{{/*
+Common labels
+*/}}
+{{- define "mysubchart.labels" -}}
+helm.sh/chart: {{ include "mysubchart.chart" . }}
+{{ include "mysubchart.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
-{{- define "mychart.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "mychart.name" . }}
+{{/*
+Selector labels
+*/}}
+{{- define "mysubchart.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "mysubchart.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
-{{- define "mychart.serviceAccountName" -}}
+{{/*
+Create the name of the service account to use
+*/}}
+{{- define "mysubchart.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "mychart.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "mysubchart.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
-
-{{- define "mychart.systemlabels" }}
-  labels:
-    drive: ssd
-    machine: frontdrive
-    rack: 4c
-    vcard: 8g
-    app.kubernetes.io/instance: "{{ $.Release.Name }}"
-    app.kubernetes.io/version: "{{ $.Chart.AppVersion }}"
-    app.kubernetes.io/managed-by: "{{ $.Release.Service }}"
-{{- end }}
-
-{{- define "mychart.version" -}}
-app_name: {{ .Chart.Name }}
-app_version: "{{ .Chart.Version }}"
-{{- end -}}

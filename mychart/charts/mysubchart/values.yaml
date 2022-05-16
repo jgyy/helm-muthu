@@ -1,22 +1,17 @@
 affinity: {}
 autoscaling:
   enabled: false
-  maxReplicas: 100
   minReplicas: 1
+  maxReplicas: 100
   targetCPUUtilizationPercentage: 80
   targetMemoryUtilizationPercentage: 80
-costCode: CC98112
+dbhostname: mysqlnode
 fullnameOverride: ""
-global:
-  orgdomain: com.muthu4all
 image:
   repository: nginx
   pullPolicy: IfNotPresent
   tag: ""
 imagePullSecrets: []
-infra:
-  zone: a,b,c
-  region: ap-southeast-1
 ingress:
   enabled: false
   className: ""
@@ -32,27 +27,15 @@ ingress:
    - secretName: chart-example-tls
      hosts:
        - chart-example.local
-LangUsed:
-  - Python
-  - Ruby
-  - Java
-  - Scala
-mysubchart:
-  dbhostname: prodmysqlnode
 nameOverride: ""
-nodeSelector: {}
-resources:
-  limits:
-    cpu: 100m
-    memory: 128Mi
-  requests:
-    cpu: 100m
-    memory: 128Mi
-projectCode: aaazzxxyy
 podAnnotations: {}
 podSecurityContext:
   fsGroup: 2000
 replicaCount: 1
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
 securityContext:
   capabilities:
     drop:
@@ -63,13 +46,12 @@ securityContext:
 service:
   type: ClusterIP
   port: 80
-serviceAccount:
-  create: true
-  annotations: {}
-  name: ""
-tags:
-  machine: frontdrive
-  rack: 4c
-  drive: ssd
-  vcard: 8g
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+nodeSelector: {}
 tolerations: []
